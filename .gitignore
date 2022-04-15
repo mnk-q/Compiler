@@ -1,7 +1,8 @@
 event_log.txt
 __pycache__
 judge0-v1.13.0
-
+codes
+outputs
 
 # Prerequisites
 *.d
