@@ -2,10 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 import logging
 from utils import configure_logger
 from serial_execution import serial_execute
-from outputs import fetch_output
+from output import fetch_output
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -21,26 +22,28 @@ def run_code():
         return render_template('index.html', code=code, output=resp["output"], input_data = input_data, status=resp["status"])
     return render_template('index.html')
 
-@app.route('/run_api', method=["POST"])
+@app.route('/run_api', methods=["POST"])
 def run_api():
     if request.method == "POST":
         content_type = request.headers.get('Content-Type')
         resp={"status": "pending", "output": "", "error": ""}
-        if (content_type == 'application/json'):
-            data = request.get_json()
+        
+        try:
+            data = request.form
+            
             if data["type"]=="serial":
                 resp=serial_execute(data)
+                
                 return jsonify(resp)
-    
-        return jsonify(resp)
+        except:
+            return jsonify(resp)
 
-@app.route('/get_status', method=["GET"])
+@app.route('/get_status', methods=["GET"])
 def get_status():
     if  request.type=="GET":
-        exec_id = request.args.get('exec_id')
+        exec_id = request.args.get('id')
         resp = fetch_output(exec_id)
         return jsonify(resp)
-
 
 
 @app.before_first_request

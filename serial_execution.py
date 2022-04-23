@@ -50,8 +50,12 @@ def serial_execute(data):
     logging.info("Running the code")
     try:
         runfile = subprocess.run([compiled_file_path], input=input_data.encode('utf-8'), stdout=PIPE, stderr=PIPE, timeout=float(data["time_limit"]))
-        output = runfile.stdout.decode('utf-8')
-        status = "code ok"
+        if runfile.returncode == 0:
+            output = runfile.stdout.decode('utf-8')
+            status = "code ok"
+        else:
+            output = "Error in Execution"
+            status = "Runtime Error"
         resp = {"output": output, "status": status, "id": exec_id}
         file_ops.write_code(resp["output"],  "txt", exec_id, "outputs/")
         logging.info("Code Executed")
