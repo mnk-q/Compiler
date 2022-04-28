@@ -1,7 +1,7 @@
 import logging
 
 
-MAX_STRING = 10
+MAX_STRING = 20
 MAX_INT = 10000
 MIN_INT = -10000
 

@@ -2,8 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 import logging
 from utils import configure_logger
 from serial_execution import serial_execute
-from output import fetch_output
-from flask_cors import CORS
+from output import fetch_output, just_output
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app)
@@ -45,6 +45,22 @@ def get_status():
         resp = fetch_output(exec_id)
         return jsonify(resp)
 
+@app.route('/get_output', methods=["POST"])
+@cross_origin()
+def get_output():
+    
+    if request.method == "POST":
+        data = request.form
+        exec_id = data["id"]
+        if exec_id[-4:] == ".cpp":
+            exec_id = exec_id[:-4]
+        
+        inp = data["input"]
+        time_limit = data["time_limit"]
+        
+        resp = just_output(exec_id, inp, time_limit)
+
+        return jsonify(resp)
 
 @app.before_first_request
 def logger_configuration():

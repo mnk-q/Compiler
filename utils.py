@@ -15,14 +15,14 @@ def get_unique_identifier(param:str):
     return t+"-"+param
 
 
-def output_exists(file_name,file_path='output/'):
+def output_exists(file_name,file_path='output/', ext = '.txt'):
     '''
     This function checks if the output file exists
     '''
     if not os.path.exists(file_path):
         os.makedirs(file_path)
         
-    if os.path.exists(file_path+file_name+".txt"):
+    if os.path.exists(file_path+file_name+ext):
         return True
     else:
         return False
