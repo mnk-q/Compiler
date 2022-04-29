@@ -6,7 +6,7 @@ from subprocess import PIPE
 import file_ops
 from safe_check import validate_input
 
-SAFE_MODE = True
+SAFE_MODE = False
 def serial_execute(data):
     #check for all arguments
 
